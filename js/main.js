@@ -5,19 +5,15 @@ $(document).ready(() => {
     e.preventDefault();
   });
 });
-
-$(document).ready(() => {
-  $('#searchOrm').on('submit', (e) => {
-    let ratingText = $('#ratingText').val();
-    getRatings(ratingText);
-    e.preventDefault();
-  });
-});
-$('.container').on('change', '.movie-rating', function() {
+/**
+Use event delegation to link to drop down to the rate function
+*/
+$('.container').on('change', '.movie-rating', function () {
   var rating = $(this).val();
   var movieId = $(this).attr('data-id');
   rateMovie(movieId, rating);
 });
+
 // Add a 401 response interceptor
 window.axios.interceptors.response.use(function (response) {
   return response;
@@ -30,23 +26,32 @@ window.axios.interceptors.response.use(function (response) {
 });
 
 function getMovies(searchText) {
-  axios.get('http://62.217.127.19:8010/movie/' + searchText)
+  axios.post('http://62.217.127.19:8010/movie/', {
+    keyword: searchText
+  })
     .then((response) => {
       console.log(response);
       let movies = response.data;
       let output = '';
       $.each(movies, (index, movie) => {
         output += `
-        <div class="col-md-5">
-        <div class="well text-center">
-        <h5>Movies Details</h5>
-        <li class="list-group-item"><strong>Title:</strong> ${movie.title}</li>
-        <li class="list-group-item"><strong>Genres:</strong> ${movie.genres}</li>
-        </div>
-        <br>
-        <a href="index.html" class="btn btn-primary">Go Back To Search</a>
-        </div>
-        `;
+    <div class="col-md-5">
+    <div class="well text-center">
+    <li class="list-group-item"><strong>MovieId:</strong> ${movie.movieId}</li>
+    <li class="list-group-item"><strong>Title:</strong> ${movie.title}</li>
+    <li class="list-group-item"><strong>Genres:</strong> ${movie.genres}</li>
+    </div>
+    <select class="movie-rating" data-id="{{movieId}}">
+      <option>Rate</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="delete">Delete</option>
+  </select>
+    </div>
+    `;
       })
       $('#movies').html(output);
     })
@@ -55,13 +60,28 @@ function getMovies(searchText) {
     });
 }
 
-function getRatings(ratingText) {
-  axios.post('http://62.217.127.19:8010/movie/', {
-  keyword: 'Toy'
-})
-.then((response) => {
-  console.log(response);
-}, (error) => {
-  console.log(error);
-});
+function rateMovie(movieId, movieRating) {
+  if (movieRating === 'delete') {
+    deleteRating(movieId);
+  } else {
+    axios.post('http://62.217.127.19:8010/ratings/', {
+      keyword: movieId
+    })
+    .then((response) => {
+      console.log(response);
+    }, (error) => {
+        console.log(error);
+      });
+  }
+}
+
+function deleteRating(movieId){
+  axios.post('http://62.217.127.19:8010/ratings/', {
+      keyword: movieId
+    })
+  .then((response) => {
+    console.log(response);
+  }, (error) => {
+    console.log(error);
+  });
 }
