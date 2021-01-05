@@ -13,6 +13,11 @@ $(document).ready(() => {
     e.preventDefault();
   });
 });
+$('.container').on('change', '.movie-rating', function() {
+  var rating = $(this).val();
+  var movieId = $(this).attr('data-id');
+  rateMovie(movieId, rating);
+});
 // Add a 401 response interceptor
 window.axios.interceptors.response.use(function (response) {
   return response;
@@ -51,36 +56,12 @@ function getMovies(searchText) {
 }
 
 function getRatings(ratingText) {
-  axios.get('http://62.217.127.19:8010/ratings/' + ratingText)
-    .then((response) => {
-      console.log(response);
-      let ratings = response.data;
-      let output = '';
-      $.each(ratings, (index, rating) => {
-        output += `
-        <table class="table table-bordered" style="width:100%">
-          <thead class="thead-light">
-            <tr>
-              <th>UserId</th>
-              <th>MovieId</th>
-              <th>Rating</th>
-              <th>Timestamp</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>${rating.userId}</td>
-              <td>${rating.movieId}</td>
-              <td>${rating.rating}</td>
-              <td>${rating.timestamp}</td>
-            </tr>
-          </tbody>
-        </table>
-        `;
-      })
-      $('#ratings').html(output);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  axios.post('http://62.217.127.19:8010/movie/', {
+  keyword: 'Toy'
+})
+.then((response) => {
+  console.log(response);
+}, (error) => {
+  console.log(error);
+});
 }
