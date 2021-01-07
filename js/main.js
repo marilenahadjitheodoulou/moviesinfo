@@ -32,6 +32,8 @@ function getMovies(searchText) {
           <li class="list-group-item"><strong>MovieId:</strong> ${movie.movieId}</li>
           <li class="list-group-item"><strong>Title:</strong> ${movie.title}</li>
           <li class="list-group-item"><strong>Genres:</strong> ${movie.genres}</li>
+          <li class="list-group-item"><strong>Rate:</strong> <input type="number" id=${index} placeholder="Rate" step="0.5" min="1" max="5"/></li>
+          <li class="list-group-item"><button id="btnRate" onclick='myFunction(${movie.movieId}, ${index})' >Click to Rate</button></li>
         </div>
       </div>
       `;
@@ -42,3 +44,14 @@ function getMovies(searchText) {
       console.log(err);
     });
 }
+
+let movies = [];
+    function myFunction(a,b) {
+      let movie = {
+            id: a,
+            rate: document.getElementById(b).value,
+      }
+
+      movies.push(movie);
+      localStorage.setItem('MyMovieList', JSON.stringify(movies) );
+    }

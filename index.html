@@ -23,30 +23,8 @@
   <div class="container">
     <div id="movies" class="row"></div>
   </div>
-  <div class="container">
-    <div class="jumbotron">
-      <h3 class="text-center">Rating For Any Movie</h3>
-      <form>
-        <div class="formBox">
-            <label for="title">Movie</label>
-            <input type="text" id="title" placeholder="Title"/>
-        </div>
-        <div class="formBox">
-            <label for="rate">Rate</label>
-            <input type="number" id="rate" placeholder="Rate" step="0.5" min="1" max="5"/>
-        </div>
-        <div class="formBox">
-            <button id="btn">Click to Rate</button>
-        </div>
-        <div id="msg">
-            <pre></pre>
-        </div>
-      </form>
-    </div>
-  </div>
 
 <script>
-    let movies = [];
     const addMovie = (ev)=>{
         ev.preventDefault();  //to stop the form submitting
         let movie = {
